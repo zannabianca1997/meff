@@ -1,0 +1,133 @@
+\documentclass[italian]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper]{geometry}
+\usepackage{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+\newcommand{\approxusing}[1]{\stackrel{#1}{\approx}}
+
+\newcommand{\lagrangian}{\mathcal{L}}
+\newcommand{\action}{\mathcal{S}}
+
+\newcommand{\ox}{\hat{x}}
+\newcommand{\oy}{\hat{y}}
+\newcommand{\meff}{m_{\mathrm{eff}}}
+
+\newcommand{\tc}{\quad\mathrm{t.c.}\quad}
+
+\newcommand{\deriv}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\diff}{\mathrm{d}}
+
+\title{Massa effettiva di una particella in un potenziale periodico}
+\author{Giuseppe Zanichelli}
+
+\begin{document}
+    Come è noto dalla teoria delle bande di Bloch, una particella sottoposta a un potenziale periodico presenta uno spettro duplice: una parte continua, caratterizzata da energia maggiore di zero, e diverse bande formate da stati legati, ognuna centrata intorno ad un'autovalore dell'hamiltoniana di singola buca e con larghezza determinata dall'interazione tra stati centrati in buche vicine.
+    Nel limite $T\to0$ un'espansione al termine quadratico della densità di stati della banda più bassa ci mostra che la particella può essere considerata libera, ma con una massa effettiva diversa dall'originale.
+    \begin{align}
+        \lagrangian = \frac{m}{2}\left(\deriv{\ox}{t}\right)^2 - V(\ox) \approxusing{T \to 0} \frac{\meff}{2}\left(\deriv{\ox}{t}\right)^2 - c && V(x+l) = V(x) 
+    \end{align}
+    Uno studio analitico di $\meff$ è impossibile se non nei casi più semplici. Buoni risultati si ottengono con approsimazioni di \textit{tight binding} ma lasciando parametri da misurare. 
+    
+\section{Misurare $\meff$}
+
+    $\meff$ è un moltiplicatore della lagrangiana in $T\to0$. Questo significa che molti risultati non dipendono da esso se non in modo marginale. Un trucco semplice per misurarlo è aggiungere un potenziale quadratico alla lagrangiana, con apertura molto ampia, e misurare la distanza tra i livelli energetici di esso.
+    \begin{equation}
+        \lagrangian = \frac{m}{2}\left(\deriv{\ox}{t}\right)^2 - V(\ox) - \frac{1}{2} \frac{V_q}{l^2} \ox^2 \approxusing{T \to 0} \frac{\meff}{2}\left(\deriv{\ox}{t}\right)^2- \frac{1}{2} \frac{V_q}{l^2} \ox^2 - c
+    \end{equation}
+    Nel limite in cui il potenziale quadratico (particella libera) e la temperatura vanno a zero solo i primi due livelli sono significativi, e sono abbastanza ravvicinati da rientrare nella zona quadratica della prima banda di Bloch.
+    \begin{equation} \label{eq:meff_from_gap}
+        \Delta E \approx \hbar \omega_q = \hbar \sqrt{\frac{V_q}{\meff l^2}}
+    \end{equation}
+    Inoltre la differenza tra i livelli energetici nel limite di basse temperature è legata esponenzialmente al prodotto di $x$ a tempi euclidei diversi, rendendolo un valore semplice da misurare.
+    
+\section{Azione, adimensionalizzazione e discretizzazione} 
+
+    L'azione euclidea adimensionalizzata del sistema su un percorso $x(\tau)$ è:
+    \begin{equation}
+        \action_E = \frac{1}{\hbar} \int_0^{\frac{\hbar}{k_B T}} \diff\tau \frac{m}{2}\left(\deriv{x}{\tau}\right)^2 + V(x) + \frac{1}{2} \frac{V_q}{l^2} x^2
+    \end{equation}
+    Volendo studiare le dinamiche del reticolo adimensionalizziamo l'equazione tenendo le dimensioni di esso in conto. Usando $V_0$ come parametro di profondità delle buche e $l$ come misura di lunghezza, possiamo fare le seguenti sostituzioni:
+    \begin{align*}
+        x &= ly  & V(x)&=V_0 \tilde{V}\left(\frac{x}{l}\right) & \lambda &= \frac{V_q}{V_0} \\
+        \omega_0 &= \sqrt{\frac{V_0}{m l^2}} & z &= \omega_0 \tau & \tilde{\beta} &= \frac{\hbar \omega_0}{k_B T} & d &
+        = \frac{V_0 l^2 m}{\hbar^2}
+    \end{align*}
+    L'azione ora è funzione solo dei parametri adimensionali $\lambda$, $\tilde{\beta}$ e $d$ (e del cammino $y(z)$).
+    \begin{equation}
+        \action_E = \sqrt{d} \int_0^{\tilde{\beta}} \diff z \frac{1}{2} \left(\deriv{y}{z}\right)^2 + \tilde{V}\left(y\right) + \frac{1}{2} \lambda y^2
+    \end{equation}
+    Infine possiamo discretizzare l'integrale dividendolo in parti di lunghezza $\eta$, ponendo $N = \frac{\tilde{\beta}}{\eta}$.
+    \begin{equation}
+        \action_E \approx \sqrt{d} \sum_{n=0}^N \left(\frac{1}{\eta} + \frac{\eta \lambda}{2}\right) y_n^2 - \frac{y_n y_{n+1}}{\eta} + \eta \tilde{V} \left(y_n\right) 
+    \end{equation}
+    Per un cambio nel percorso $y_n \to y_n + \delta$ abbiamo un $\Delta\action_E$ di
+    \begin{equation}
+        \Delta\action_E = \sqrt{d} \sum_{n=0}^N \left(\frac{1}{\eta} + \frac{\eta \lambda}{2}\right) (2y_n\delta + \delta^2) - \frac{y_{n-1} + y_{n+1}}{\eta}\delta + \eta \left( \tilde{V} \left(y_n + \delta\right) - \tilde{V} \left(y_n\right) \right)
+    \end{equation}
+    
+\section{Validità dei limiti}
+
+    I limiti di bassa temperatura, particella libera e continuo sono ora $\tilde{\beta} \to +\infty$, $\lambda \to 0$ e $\eta \to 0$
+    \subsection{Limite di bassa temperatura}
+    Perchè la temperatura sia bassa $k_B T$ deve essere molto minore sia della spaziatura dei livelli della singola buca, che di quelli dell'oscillatore.
+    Una grossolana stima dimensionale dice (con $\meff = \gamma m$):
+    $$
+        \frac{\hbar\omega_0}{\hbar\omega_q} \approx \sqrt{\frac{\meff V_0}{m V_q}} = \sqrt{\frac{\gamma}{\lambda}}
+    $$
+    Nel limite di particella libera ($\lambda\to0$) come previsto la condizione più stringente è sui livelli dell'oscillatore:
+    \begin{equation}
+        k_B T \ll \hbar \omega_q \implies \tilde{\beta} \gg \sqrt{\frac{\gamma }{\lambda}}
+    \end{equation}
+    Il raggiungimento di questo limite sarà comunque ben verificato dal raggiungimento di un buon fit esponenziale per $\Delta E$
+    
+    \subsection{Limite di particella libera}
+    
+    Perchè la misura sia buona vi deve essere un numero sufficiente di siti dove il gradiente del potenziale quadratico non interferisca sostanzialmente con la forma delle buche. Ciò accade per:
+    $$
+        \left|V_0\right| > \left|l\deriv{}{x}\left(\frac{1}{2}\frac{V_q}{l^2}x^2\right)\right|
+        \implies \left|y\right| < \frac{1}{\lambda}
+    $$
+    Abbiamo quindi che il numero di siti dove la particella è libera è $n = \frac{2}{\lambda}$. Perchè vi siano almeno $n_{min}$ siti liberi imponiamo la condizione
+    \begin{equation}
+        \lambda < \frac{2}{n_{min}}
+    \end{equation}
+    
+    \subsection{Limite al continuo}
+    
+    $\eta$ deve essere molto inferiore ad entrambi le scale temporali presenti. Di esse la più stringente nel limite di particella libera è $\omega_0^{-1}$, il che si semplifica, essendo già $\eta$ in unità di $\omega_0^{-1}$, a:
+    \begin{equation}
+        \eta \ll 1
+    \end{equation}
+    
+\section{Stima della separazione $\Delta E$}
+
+    A $T=0$ le medie sono prese sullo stato fondamentale. Espandendo le medie si può ottenere:
+    $$
+        \lim_{\tau\to+\inf} \left(\langle x\left(\tau\right)x\left(0\right)\rangle - \langle x \rangle^2\right) = k e^{-\frac{\Delta E}{\hbar} \tau}
+    $$
+    Riscrivendo in termini di variabili adimensionali e linearizzando:
+    \begin{equation}
+        -\frac{\Delta E}{\hbar \omega_0} z + c = \ln\left(\lim_{z\to+\inf} \left(\langle y\left(z\right)y\left(0\right)\rangle - \langle y \rangle^2\right)\right)
+    \end{equation}sxz
+    Il gap può essere ottenuto quindi con un fit lineare. Esso va eseguito dove $z$ è sufficentemente grande perchè il fit sia buono, ma con $z \ll \frac{\tilde{\beta}}{2}$ per evitare gli effetti delle condizioni periodiche.
+    Infine possiamo usare \eqref{eq:meff_from_gap} per esprimere $m_{eff}$ in base al gap energetico:
+    \begin{equation}
+        \frac{m_{eff}}{m} = \lambda \left(\frac{\Delta E}{\hbar \omega_0}\right)^{-2}
+    \end{equation}
+
+\section{Che cosa misurare}
+    
+    Il rapporto $\frac{m_{eff}}{m}$ dipende dalla funzione $\tilde{V}(y)$ e dal parametro di dimensione delle buche adimensionale $d = \frac{V_0 l^2 m}{\hbar^2}$
+    Il caso speciale di potenziale a onda quadra gode di una soluzione esatta per la funzione d'onda. Purtroppo non ho trovato una soluzione analitica della dipendenza di $m_{eff}$ da $d$, ma è possibile uno studio numerico a partire dalla condizione per le bande di Bloch.
+    Per $d < 100$, un'approssimazione quadratica è ottima e otteniamo:
+    \begin{equation}
+        \frac{m_{eff}}{m} = 1 + \left(0.00589 \pm 3.2 \times 10^{-8}\right)\left(\frac{V_0 l^2 m}{\hbar^2}\right)^2
+    \end{equation}
+    Voglio quindi confermare questo risultato, e trovare i coefficienti per diversi $\tilde{V}(y)$
+    
+\end{document}
