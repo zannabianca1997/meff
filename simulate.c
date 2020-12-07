@@ -28,15 +28,14 @@ typedef unsigned int* geometry_t;
 
 // --- parameters interpretes ---
 
-// invocation_string = "{simulator_file_name} {seed} {d} {lambda} {eta} {N} {local_steps} {measuration_to_take} {measure_every} {step_size}"
+// invocation_string = "{simulator_file_name} {seed} {d} {eta} {N} {local_steps} {measuration_to_take} {measure_every} {step_size}"
 
 action_coefficients_t get_coefficients(char **argv){
     double d = strtod(argv[2], NULL);
-    double lambda = strtod(argv[3], NULL);
-    double eta = strtod(argv[4], NULL);
+    double eta = strtod(argv[3], NULL);
     
     action_coefficients_t coeffs = {
-        sqrt(d) * (1. / eta + eta * lambda / 2.),
+        sqrt(d) / eta,
         - sqrt(d) / eta,
         sqrt(d) * eta
     };
@@ -46,11 +45,11 @@ action_coefficients_t get_coefficients(char **argv){
 markov_setup_t get_markov_setup(char **argv){
     markov_setup_t setup = {
         strtoul(argv[1], NULL, 10),
+        (unsigned int)strtoul(argv[4], NULL, 10),
         (unsigned int)strtoul(argv[5], NULL, 10),
         (unsigned int)strtoul(argv[6], NULL, 10),
         (unsigned int)strtoul(argv[7], NULL, 10),
-        (unsigned int)strtoul(argv[8], NULL, 10),
-        strtod(argv[9], NULL)
+        strtod(argv[8], NULL)
     };
     return setup; 
 }
@@ -109,12 +108,13 @@ void run_simulation(action_coefficients_t coeffs, markov_setup_t setup){
             printf(" %f", state[n]);
         printf("\n");
     }
+    free(state); free(geometry);
 }
 
 // --- main ---    
 
 int main(int argc, char **argv){
-    if(argc != 10){
+    if(argc != 9){
         fprintf(stderr, "Wrong argument number");
         return 1;
     } 
